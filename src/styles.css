@@ -1,3 +1,7 @@
 .img-in-list {
     max-height: 50px;
 }
+
+a.list-group-item {
+    cursor: pointer;
+}
