@@ -5,3 +5,7 @@
  a {
     cursor: pointer;
 }
+
+input.ng-invalid.ng-touched {
+    border: 1px solid rgb(255, 122, 122);
+}
