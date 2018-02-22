@@ -1,19 +1,23 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { DataStorageService } from '../shared/data-storage.service';
 
 @Component({
-    selector : 'app-header',
-    templateUrl : './header.component.html'
+    selector: 'app-header',
+    templateUrl: './header.component.html'
 })
 export class HeaderComponent {
-    @Output() recipesClicked = new EventEmitter<{name: string, content: string}>();
-    @Output() shoppingListClicked = new EventEmitter<{name: string, content: string}>();
-    
-    onRecipesClick() {
-        this.recipesClicked.emit();
+
+    constructor(private dataStorageService: DataStorageService) { }
+    onSaveData() {
+        this.dataStorageService.storeRecipes()
+        .subscribe(
+            (response: Response) => {
+                console.log(response);
+            }
+        );
     }
 
-    onShoppingListClick() {
-        this.shoppingListClicked.emit();
+    onFetchData() {
+        this.dataStorageService.getRecipes();
     }
-
 }
