@@ -13,8 +13,6 @@ export interface State {
   editedIngredientIndex: number;
 }
 
-export const ADD_INGREDIENT = 'ADD_INGREDIENT';
-
 const initialState = {
   ingredients: [
     new Ingredient('Apples', 5),
