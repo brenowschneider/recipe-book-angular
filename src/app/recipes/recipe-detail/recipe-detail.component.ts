@@ -1,11 +1,12 @@
-import { Recipe } from '../recipe.model';
 import { Component, Input, OnInit } from '@angular/core';
 import { Ingredient } from '../../shared/ingredient.model';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { RecipeService } from '../recipe.service';
 import { Store } from '@ngrx/store';
 import * as ShoppingListActions from '../../shopping-list/store/shopping-list.actions';
-import * as fromApp from '../../store/app.reducers';
+import * as fromRecipe from '../store/recipe.reducers';
+import * as RecipeActions from '../store/recipe.actions';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -13,29 +14,35 @@ import * as fromApp from '../../store/app.reducers';
   styleUrls: ['./recipe-detail.component.css']
 })
 export class RecipeDetailComponent implements OnInit {
-  recipeDetail: Recipe;
+  recipeState: Observable<fromRecipe.State>;
   id: number;
 
   constructor(private recipeService: RecipeService,
               private route: ActivatedRoute,
               private router: Router,
-              private store: Store<fromApp.AppState>) { }
+              private store: Store<fromRecipe.FeatureState>) { }
 
   ngOnInit() {
     this.route.params.subscribe(
       (params: Params) => {
         this.id = +params['id'];
-        this.recipeDetail = this.recipeService.getRecipe(this.id);
+        this.recipeState = this.store.select('recipes');
       }
     );
   }
 
-  onAddIngredientsToShoppingList(ingredients: Ingredient[]) {
-    this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients));
+  onAddIngredientsToShoppingList() {
+    this.store.select('recipes')
+    .take(1)
+    .subscribe(
+      (recipeState: fromRecipe.State) => {
+        this.store.dispatch(new ShoppingListActions.AddIngredients(recipeState.recipes[this.id].ingredients));
+      }
+    );
   }
 
   onDeleteRecipe() {
-    this.recipeService.deleteRecipe(this.id);
+    this.store.dispatch(new RecipeActions.DeleteRecipe(this.id));
     this.router.navigate(['/recipes']);
   }
 }
