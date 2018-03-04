@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
-import { DataStorageService } from '../../shared/data-storage.service';
+import { Component, OnInit } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
@@ -17,8 +16,7 @@ export class HeaderComponent implements OnInit {
 
     authState: Observable<fromAuth.State>;
 
-    constructor(private dataStorageService: DataStorageService,
-        private store: Store<fromApp.AppState>) { }
+    constructor(private store: Store<fromApp.AppState>) { }
 
 
     ngOnInit() {
